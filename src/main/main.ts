@@ -3,6 +3,9 @@
 import { app, BrowserWindow, Menu } from 'electron'
 import icon from '../../resources/icon.png?asset'
 import { PRELOAD_PATH, RENDERER_HMR_URL, RENDERER_PATH } from './config'
+import { alertUnhandledErrors, handleWebContentErrors } from './error-handling'
+
+alertUnhandledErrors()
 
 const gotTheLock = app.requestSingleInstanceLock()
 
@@ -34,6 +37,8 @@ function createWindow() {
 			disableBlinkFeatures: 'Auxclick', // https://github.com/doyensec/electronegativity/wiki/AUXCLICK_JS_CHECK
 		},
 	})
+
+	handleWebContentErrors(win)
 
 	// https://electron-vite.org/guide/hmr
 	if (!app.isPackaged && RENDERER_HMR_URL) {
