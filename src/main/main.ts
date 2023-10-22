@@ -4,6 +4,7 @@ import { app, BrowserWindow, Menu } from 'electron'
 import icon from '../../resources/icon.png?asset'
 import { PRELOAD_PATH, RENDERER_HMR_URL, RENDERER_PATH } from './config'
 import { alertUnhandledErrors, handleWebContentErrors } from './error-handling'
+import { watchAndHandleTimeEvents } from './time-tick'
 
 alertUnhandledErrors()
 
@@ -16,6 +17,7 @@ if (!gotTheLock) {
 
 	app.whenReady().then(() => {
 		const win = createWindow()
+		watchAndHandleTimeEvents(win)
 	})
 
 	app.on('window-all-closed', () => {
