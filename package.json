@@ -1,0 +1,29 @@
+{
+	"name": "alarm-clock",
+	"version": "1.0.0",
+	"main": "./dist/main/main.js",
+	"scripts": {
+		"start": "electron-vite preview",
+		"dev": "electron-vite dev",
+		"prebuild": "electron-vite build",
+		"typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
+		"typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
+		"typecheck": "npm run typecheck:node && npm run typecheck:web"
+	},
+	"dependencies": {
+		"@picocss/pico": "^1.5.10"
+	},
+	"devDependencies": {
+		"@types/node": "^18.18.6",
+		"@types/react": "^18.2.31",
+		"@types/react-dom": "^18.2.14",
+		"@vitejs/plugin-react": "^4.0.4",
+		"electron": "^27.0.2",
+		"electron-vite": "^1.0.27",
+		"prettier": "^3.0.2",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"typescript": "^5.1.6",
+		"vite": "^4.4.9"
+	}
+}
