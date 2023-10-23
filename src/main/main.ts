@@ -40,8 +40,8 @@ async function startApp() {
 function createWindow() {
 	const win = new BrowserWindow({
 		title: 'Clock',
-		width: 900,
-		height: 670,
+		width: 800,
+		height: 800,
 		center: true,
 		icon,
 		webPreferences: {
