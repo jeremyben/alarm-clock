@@ -9,7 +9,7 @@ import type { Alarm } from '../interfaces'
 export namespace ExposedApi {
 	const SEND_CHANNELS: UnionToTuple<SendChannel> = ['']
 	const SEND_SYNC_CHANNELS: UnionToTuple<SendSyncChannel> = ['list-alarms']
-	const LISTEN_CHANNELS: UnionToTuple<ListenChannel> = ['time-tick']
+	const LISTEN_CHANNELS: UnionToTuple<ListenChannel> = ['time-tick', 'ring']
 	const INVOKE_CHANNELS: UnionToTuple<InvokeChannel> = ['create-alarm', 'remove-alarm']
 
 	/**
@@ -40,6 +40,7 @@ export namespace ExposedApi {
 	 * main => renderer
 	 */
 	export function listen(channel: 'time-tick', listener: (time: string) => void): void
+	export function listen(channel: 'ring', listener: () => void): void
 	export function listen(channel: ListenChannel, listener: (...args: any[]) => any) {
 		if (LISTEN_CHANNELS.includes(channel)) {
 			ipcRenderer.on(channel, (event, ...args) => listener(...args))
