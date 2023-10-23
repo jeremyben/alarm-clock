@@ -11,7 +11,8 @@
 		"typecheck": "npm run typecheck:node && npm run typecheck:web"
 	},
 	"dependencies": {
-		"@picocss/pico": "^1.5.10"
+		"@picocss/pico": "^1.5.10",
+		"electron-store": "^8.1.0"
 	},
 	"devDependencies": {
 		"@types/node": "^18.18.6",
