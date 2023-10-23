@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer } from 'electron'
 import { ChannelError } from './channel-error'
-import type { OverloadUnion, UnionToTuple } from '../type-utils'
+import type { OverloadUnion, R, UnionToTuple } from '../type-utils'
+import type { Alarm } from '../interfaces'
 
 // On ne peut pas utiliser une instance de classe, car le prototype est supprimé.
 // https://www.electronjs.org/docs/latest/api/context-bridge#api-functions
@@ -9,7 +10,7 @@ export namespace ExposedApi {
 	const SEND_CHANNELS: UnionToTuple<SendChannel> = ['']
 	const SEND_SYNC_CHANNELS: UnionToTuple<SendSyncChannel> = ['']
 	const LISTEN_CHANNELS: UnionToTuple<ListenChannel> = ['time-tick']
-	const INVOKE_CHANNELS: UnionToTuple<InvokeChannel> = ['']
+	const INVOKE_CHANNELS: UnionToTuple<InvokeChannel> = ['list-alarms', 'create-alarm', 'remove-alarm']
 
 	/**
 	 * renderer => main
@@ -50,7 +51,9 @@ export namespace ExposedApi {
 	/**
 	 * renderer => main => renderer (async)
 	 */
-	export async function invoke(channel: ''): Promise<boolean>
+	export async function invoke(channel: 'list-alarms'): Promise<Alarm[]>
+	export async function invoke(channel: 'create-alarm', data: Alarm): Promise<R<Alarm[], string>>
+	export async function invoke(channel: 'remove-alarm', data: Alarm): Promise<R<Alarm[], string>>
 	export async function invoke(channel: InvokeChannel, data?: any): Promise<any> {
 		if (INVOKE_CHANNELS.includes(channel)) {
 			return ipcRenderer.invoke(channel, data)

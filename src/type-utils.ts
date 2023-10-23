@@ -1,4 +1,9 @@
 /**
+ * Type Result.
+ */
+export type R<T, E> = { ok: true; value: T } | { ok: false; error: E }
+
+/**
  * Convertit des overloads en union.
  * @see https://github.com/microsoft/TypeScript/issues/32164#issuecomment-1146737709
  */

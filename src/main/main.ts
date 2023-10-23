@@ -2,11 +2,17 @@
 
 import { app, BrowserWindow, Menu } from 'electron'
 import icon from '../../resources/icon.png?asset'
-import { PRELOAD_PATH, RENDERER_HMR_URL, RENDERER_PATH } from './config'
+import { PRELOAD_PATH, RENDERER_HMR_URL, RENDERER_PATH } from './constants'
 import { alertUnhandledErrors, handleWebContentErrors } from './error-handling'
-import { watchAndHandleTimeEvents } from './time-tick'
+import { handleTimeTickEvents } from './time-tick'
+import path from 'path'
+import { handleAlarmRendererEvents } from './alarms'
 
 alertUnhandledErrors()
+
+if (import.meta.env.DEV) {
+	app.setPath('appData', path.join(__dirname, '..', '..', 'temp'))
+}
 
 const gotTheLock = app.requestSingleInstanceLock()
 
@@ -15,15 +21,12 @@ if (!gotTheLock) {
 } else {
 	Menu.setApplicationMenu(null)
 
+	handleAppEvents()
+
 	app.whenReady().then(() => {
 		const win = createWindow()
-		watchAndHandleTimeEvents(win)
-	})
-
-	app.on('window-all-closed', () => {
-		if (process.platform !== 'darwin') {
-			app.quit()
-		}
+		handleTimeTickEvents(win)
+		handleAlarmRendererEvents()
 	})
 }
 
@@ -54,4 +57,12 @@ function createWindow() {
 	}
 
 	return win
+}
+
+function handleAppEvents() {
+	app.on('window-all-closed', () => {
+		if (process.platform !== 'darwin') {
+			app.quit()
+		}
+	})
 }

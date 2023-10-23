@@ -1,7 +1,7 @@
 import { BrowserWindow } from 'electron'
-import { sendToRenderer } from './ipc'
+import { sendToRenderer } from './ipc-methods'
 
-export function watchAndHandleTimeEvents(win: BrowserWindow) {
+export function handleTimeTickEvents(win: BrowserWindow) {
 	setInterval(() => tick(win), 1000)
 }
 
