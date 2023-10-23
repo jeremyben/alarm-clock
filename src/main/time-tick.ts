@@ -2,6 +2,7 @@ import { BrowserWindow } from 'electron'
 import { sendToRenderer } from './ipc-methods'
 
 export function handleTimeTickEvents(win: BrowserWindow) {
+	tick(win)
 	setInterval(() => tick(win), 1000)
 }
 

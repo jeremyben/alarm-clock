@@ -16,15 +16,22 @@ if (import.meta.env.DEV) {
 
 const gotTheLock = app.requestSingleInstanceLock()
 
-if (!gotTheLock) {
-	app.quit()
+if (gotTheLock) {
+	startApp()
 } else {
+	app.quit()
+}
+
+async function startApp() {
 	Menu.setApplicationMenu(null)
+
+	await app.whenReady()
 
 	handleAppEvents()
 
-	app.whenReady().then(() => {
-		const win = createWindow()
+	const win = createWindow()
+
+	win.webContents.on('did-finish-load', () => {
 		handleTimeTickEvents(win)
 		handleAlarmRendererEvents()
 	})
