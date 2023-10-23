@@ -42,7 +42,15 @@ function AlarmCreate(props: { onCreate: (newAlarm: Alarm) => Promise<boolean> })
 
 	return (
 		<form onSubmit={submit}>
-			<input type="time" name="time" required value={time} onChange={(ev) => setTime(ev.target.value)} />
+			<label htmlFor="time">New Alarm</label>
+			<input
+				type="time"
+				name="time"
+				id="time"
+				required
+				value={time}
+				onChange={(ev) => setTime(ev.target.value)}
+			/>
 			<button type="submit" aria-busy={creating} disabled={creating}>
 				Save
 			</button>
