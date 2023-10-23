@@ -8,9 +8,9 @@ import type { Alarm } from '../interfaces'
 
 export namespace ExposedApi {
 	const SEND_CHANNELS: UnionToTuple<SendChannel> = ['']
-	const SEND_SYNC_CHANNELS: UnionToTuple<SendSyncChannel> = ['']
+	const SEND_SYNC_CHANNELS: UnionToTuple<SendSyncChannel> = ['list-alarms']
 	const LISTEN_CHANNELS: UnionToTuple<ListenChannel> = ['time-tick']
-	const INVOKE_CHANNELS: UnionToTuple<InvokeChannel> = ['list-alarms', 'create-alarm', 'remove-alarm']
+	const INVOKE_CHANNELS: UnionToTuple<InvokeChannel> = ['create-alarm', 'remove-alarm']
 
 	/**
 	 * renderer => main
@@ -27,7 +27,7 @@ export namespace ExposedApi {
 	/**
 	 * renderer => main => renderer (sync)
 	 */
-	export function sendSync(channel: ''): void
+	export function sendSync(channel: 'list-alarms'): Alarm[]
 	export function sendSync(channel: SendSyncChannel, ...args: any[]): any {
 		if (SEND_SYNC_CHANNELS.includes(channel)) {
 			return ipcRenderer.sendSync(channel, ...args)
@@ -51,7 +51,6 @@ export namespace ExposedApi {
 	/**
 	 * renderer => main => renderer (async)
 	 */
-	export async function invoke(channel: 'list-alarms'): Promise<Alarm[]>
 	export async function invoke(channel: 'create-alarm', data: Alarm): Promise<R<Alarm[], string>>
 	export async function invoke(channel: 'remove-alarm', data: Alarm): Promise<R<Alarm[], string>>
 	export async function invoke(channel: InvokeChannel, data?: any): Promise<any> {

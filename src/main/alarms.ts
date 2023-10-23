@@ -1,6 +1,6 @@
 import Store from 'electron-store'
 import { Alarm } from '../interfaces'
-import { handleInvoke } from './ipc-methods'
+import { handleInvoke, handleSendSync } from './ipc-methods'
 
 const store = new Store<{ alarms: Alarm[] }>({
 	name: 'alarm',
@@ -23,15 +23,17 @@ const store = new Store<{ alarms: Alarm[] }>({
 	},
 })
 
+export function listAlarms(): Alarm[] {
+	return store.get('alarms')
+}
+
 export function handleAlarmRendererEvents() {
-	handleInvoke('list-alarms', () => {
-		return store.get('alarms')
-	})
+	handleSendSync('list-alarms', listAlarms)
 
 	handleInvoke('create-alarm', (newAlarm) => {
 		console.log('create-alarm event:', newAlarm)
 
-		const alarms = store.get('alarms')
+		const alarms = listAlarms()
 		const alreadyExists = alarms.some((al) => al.hour === newAlarm.hour && al.minute === newAlarm.minute)
 
 		if (alreadyExists) {
@@ -44,15 +46,15 @@ export function handleAlarmRendererEvents() {
 			store.set('alarms', alarms)
 			return { ok: true, value: alarms }
 		} catch (error) {
-			// todo
-			return { ok: false, error: JSON.stringify(error) }
+			// todo: mieux gérer les erreurs venues de la validation du store.
+			return { ok: false, error: String(error) }
 		}
 	})
 
 	handleInvoke('remove-alarm', (alarmToRemove) => {
 		console.log('remove-alarm event:', alarmToRemove)
 
-		const alarms = store.get('alarms')
+		const alarms = listAlarms()
 		const alarmFoundIndex = alarms.findIndex(
 			(al) => al.hour === alarmToRemove.hour && al.minute === alarmToRemove.minute
 		)

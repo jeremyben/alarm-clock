@@ -8,28 +8,33 @@ function App(): JSX.Element {
 	const [alarms, setAlarms] = useState([] as Alarm[])
 
 	useEffect(() => {
-		const listAlarms = async () => {
-			const alarmsFetched = await window.api.invoke('list-alarms')
-			setAlarms(alarmsFetched)
-		}
-
-		listAlarms().catch(console.error)
+		const alarmsFetched = window.api.sendSync('list-alarms')
+		setAlarms(alarmsFetched)
 	}, [])
 
 	const createAlarm = async (newAlarm: Alarm) => {
-		const alarmResult = await window.api.invoke('create-alarm', newAlarm)
+		const res = await window.api.invoke('create-alarm', newAlarm)
 
-		if (alarmResult.ok) setAlarms(alarmResult.value)
-		else alert(alarmResult.error)
+		if (res.ok) setAlarms(res.value)
+		else alert(res.error)
 
-		return alarmResult.ok
+		return res.ok
+	}
+
+	const removeAlarm = async (alarmToRemove: Alarm) => {
+		const res = await window.api.invoke('remove-alarm', alarmToRemove)
+
+		if (res.ok) setAlarms(res.value)
+		else alert(res.error)
+
+		return res.ok
 	}
 
 	return (
 		<div className="container">
 			<DigitalClock></DigitalClock>
 
-			<AlarmList alarms={alarms}></AlarmList>
+			<AlarmList alarms={alarms} onRemove={removeAlarm}></AlarmList>
 			<AlarmCreate onCreate={createAlarm}></AlarmCreate>
 		</div>
 	)
