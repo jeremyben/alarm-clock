@@ -4,7 +4,7 @@
 	"main": "./dist/main/main.js",
 	"scripts": {
 		"start": "electron-vite preview",
-		"dev": "electron-vite dev",
+		"dev": "electron-vite dev --watch",
 		"prebuild": "electron-vite build",
 		"typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
 		"typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
