@@ -4,7 +4,9 @@ import { listAlarms } from './alarms'
 
 export function handleTimeTickEvents(win: BrowserWindow) {
 	tick(win)
-	setInterval(() => tick(win), 1000)
+	const intervalId = setInterval(() => tick(win), 1000)
+
+	win.on('close', () => clearInterval(intervalId))
 }
 
 // State mémoire pour éviter de lancer plusieurs alarmes pendant une même minute.
