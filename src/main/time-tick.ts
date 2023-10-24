@@ -25,11 +25,10 @@ function tick(win: BrowserWindow) {
 	if (ringingAlarm) {
 		const alreadyRinging = ringingAlarm.hour === hour && ringingAlarm.minute === minute
 
-		if (alreadyRinging) {
-			return
-		} else {
-			ringingAlarm = null
-		}
+		// Coupe en cas d'alarme qui sonne déjà.
+		if (alreadyRinging) return
+
+		ringingAlarm = null
 	}
 
 	const alarms = listAlarms()
