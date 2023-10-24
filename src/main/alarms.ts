@@ -37,7 +37,7 @@ export function handleAlarmRendererEvents() {
 		const alreadyExists = alarms.some((al) => al.hour === newAlarm.hour && al.minute === newAlarm.minute)
 
 		if (alreadyExists) {
-			return { ok: false, error: 'Alarme existe déjà' }
+			return { ok: false, error: 'Alarm already exists' }
 		}
 
 		alarms.push(newAlarm)
@@ -64,7 +64,7 @@ export function handleAlarmRendererEvents() {
 			store.set('alarms', alarms)
 			return { ok: true, value: alarms }
 		} else {
-			return { ok: false, error: 'Alarme à supprimer non trouvée' }
+			return { ok: false, error: 'Alarm to remove not found' }
 		}
 	})
 }
