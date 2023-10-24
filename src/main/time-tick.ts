@@ -1,6 +1,7 @@
 import { BrowserWindow } from 'electron'
 import { sendToRenderer } from './ipc-methods'
 import { listAlarms } from './alarms'
+import { Alarm } from '../interfaces'
 
 export function handleTimeTickEvents(win: BrowserWindow) {
 	tick(win)
@@ -9,8 +10,8 @@ export function handleTimeTickEvents(win: BrowserWindow) {
 	win.on('close', () => clearInterval(intervalId))
 }
 
-// State mémoire pour éviter de lancer plusieurs alarmes pendant une même minute.
-let isRinging = false
+// State mémoire pour éviter de faire sonner la même alarme à chaque seconde.
+let ringingAlarm: Alarm | null = null
 
 function tick(win: BrowserWindow) {
 	const now = new Date()
@@ -21,17 +22,22 @@ function tick(win: BrowserWindow) {
 	const hour = now.getHours()
 	const minute = now.getMinutes()
 
-	const alarms = listAlarms()
+	if (ringingAlarm) {
+		const alreadyRinging = ringingAlarm.hour === hour && ringingAlarm.minute === minute
 
+		if (alreadyRinging) {
+			return
+		} else {
+			ringingAlarm = null
+		}
+	}
+
+	const alarms = listAlarms()
 	const shouldRingAlarm = alarms.find((al) => al.hour === hour && al.minute === minute)
 
 	if (shouldRingAlarm) {
-		if (!isRinging) {
-			sendToRenderer(win, 'ring', undefined)
-		}
-		isRinging = true
-	} else {
-		// On doit bien réinitialiser.
-		isRinging = false
+		console.log('send ring:', shouldRingAlarm)
+		sendToRenderer(win, 'ring', undefined)
+		ringingAlarm = shouldRingAlarm
 	}
 }
